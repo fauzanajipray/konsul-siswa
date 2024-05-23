@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "666896413630",
+    "firebase_url": "https://konsultasi-c1330-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "konsultasi-c1330",
+    "storage_bucket": "konsultasi-c1330.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666896413630:android:0da0c11d9ebb87b6843fef",
+        "android_client_info": {
+          "package_name": "com.example.konsul_dosen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsptU3GVvXaP-OAaZjoa50G3vLL_OwWpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666896413630:android:f458d701d4223e5d843fef",
+        "android_client_info": {
+          "package_name": "com.jan.konsul"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsptU3GVvXaP-OAaZjoa50G3vLL_OwWpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

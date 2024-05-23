@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAFkTyrWYjRZPrrgYSJsz_B5-VlSO57aBU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>666896413630</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.konsul</string>
+	<key>PROJECT_ID</key>
+	<string>konsultasi-c1330</string>
+	<key>STORAGE_BUCKET</key>
+	<string>konsultasi-c1330.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:666896413630:ios:bec29fe1d8816b64843fef</string>
+	<key>DATABASE_URL</key>
+	<string>https://konsultasi-c1330-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
