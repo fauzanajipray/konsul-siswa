@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:konsul/features/auth/bloc/auth_cubit.dart';
+import 'package:konsul/widgets/my_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,8 +17,17 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
           // title: const Text('Title'),
           ),
-      body: const Center(
-        child: Text("Home"),
+      body: Center(
+        child: Column(
+          children: [
+            const Text("Home"),
+            MyButton(
+                onPressed: () {
+                  context.read<AuthCubit>().setUnauthenticated();
+                },
+                text: 'Logout'),
+          ],
+        ),
       ),
     );
   }

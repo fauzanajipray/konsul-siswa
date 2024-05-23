@@ -29,7 +29,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           'email': email,
           'name': nama,
           'nisn': nisn,
-          'type': 'dosen',
+          'type': 'siswa',
         });
 
         // Update the state with the newly created user
@@ -38,16 +38,18 @@ class RegisterCubit extends Cubit<RegisterState> {
           user: UserLogin(id: userId, email: email, name: nama, nisn: nisn),
           error: null,
         ));
+      } else {
+        throw FirebaseAuthException(
+            code: 'user-null', message: 'User Auth is null');
       }
-      // throw user null
-      throw FirebaseAuthException(
-          code: 'user-null', message: 'User Auth is null');
     } on FirebaseAuthException catch (e) {
       String? errorMsg = '';
       if (e.code == 'weak-password') {
         errorMsg = 'The password provided is too weak.';
       } else if (e.code == 'email-already-in-use') {
         errorMsg = 'The account already exists for that email.';
+      } else if (e.code == 'user-null') {
+        errorMsg = 'User Auth is null';
       } else {
         errorMsg = e.message;
       }
