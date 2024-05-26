@@ -6,6 +6,7 @@ class UserLogin {
   final String? name;
   final String? nisn;
   final String? type;
+  final String? pembimbing;
 
   UserLogin({
     this.id,
@@ -13,6 +14,7 @@ class UserLogin {
     this.name,
     this.nisn,
     this.type,
+    this.pembimbing,
   });
 
   factory UserLogin.fromRawJson(String id, String str) =>
@@ -26,6 +28,7 @@ class UserLogin {
         name: json["name"] ?? '',
         nisn: json["nisn"] ?? '',
         type: json["type"] ?? '',
+        pembimbing: json["pembimbing"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,5 +37,6 @@ class UserLogin {
         "name": name,
         "nisn": nisn,
         "type": type,
+        "pembimbing": pembimbing,
       };
 }

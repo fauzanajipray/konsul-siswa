@@ -1,12 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:konsul/features/article/presentations/article_page.dart';
 import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/auth/bloc/auth_state.dart';
+import 'package:konsul/features/auth/bloc/login_cubit.dart';
 import 'package:konsul/features/auth/presentations/sign_in_page.dart';
 import 'package:konsul/features/auth/presentations/sign_up_page.dart';
+import 'package:konsul/features/chat/presentations/chat_page.dart';
+import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
+import 'package:konsul/features/dosen/presentations/dosen_page.dart';
 import 'package:konsul/features/home/presentations/home_page.dart';
+import 'package:konsul/features/profile/presentations/profile_page.dart';
 import 'package:konsul/widgets/bottom_navigation_page.dart';
 
 class AppRouter {
@@ -19,6 +26,7 @@ class AppRouter {
   static final GlobalKey<NavigatorState> tab2 = GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> tab3 = GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> tab4 = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> tab5 = GlobalKey<NavigatorState>();
   AppRouter(this._authCubit) {
     final routes = [
       StatefulShellRoute.indexedStack(
@@ -44,7 +52,7 @@ class AppRouter {
                 path: Destination.articlePath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const HomePage(),
+                    child: const ArticlePage(),
                     state: state,
                   );
                 },
@@ -55,10 +63,13 @@ class AppRouter {
             navigatorKey: tab3,
             routes: [
               GoRoute(
-                path: Destination.menu3Path,
+                path: Destination.dosenPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const HomePage(),
+                    child: BlocProvider<MydosenCubit>(
+                      create: (context) => MydosenCubit(),
+                      child: const DosenPage(),
+                    ),
                     state: state,
                   );
                 },
@@ -69,10 +80,24 @@ class AppRouter {
             navigatorKey: tab4,
             routes: [
               GoRoute(
-                path: Destination.menu4Path,
+                path: Destination.chatPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const HomePage(),
+                    child: const ChatPage(),
+                    state: state,
+                  );
+                },
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: tab5,
+            routes: [
+              GoRoute(
+                path: Destination.profilePath,
+                pageBuilder: (context, state) {
+                  return getPage(
+                    child: const ProfilePage(),
                     state: state,
                   );
                 },
@@ -180,8 +205,9 @@ class Destination {
   static const String homePath = '/home';
   static const String articlePath = '/article';
   static const String addArticlePath = '/add-article';
-  static const String menu3Path = '/menu3Path';
-  static const String menu4Path = '/menu4Path';
+  static const String dosenPath = '/dosen';
+  static const String chatPath = '/chat';
+  static const String profilePath = '/profile';
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {
