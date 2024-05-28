@@ -35,9 +35,6 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget buildScreen(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          // title: const Text('Title'),
-          ),
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state.status == LoadStatus.success) {

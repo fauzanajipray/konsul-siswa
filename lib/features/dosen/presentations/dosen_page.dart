@@ -256,9 +256,7 @@ class _DosenPageState extends State<DosenPage> {
                               ),
                             ),
                             trailing: const Icon(Icons.keyboard_arrow_right),
-                            subtitle: Text(uid),
                             onTap: () {
-                              // showDialogMsg(context, 'Here');
                               showDialogConfirmationDelete(
                                 context,
                                 () => context.read<MydosenCubit>().setDosen(

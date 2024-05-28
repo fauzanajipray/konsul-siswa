@@ -6,14 +6,15 @@ import 'package:go_router/go_router.dart';
 import 'package:konsul/features/article/presentations/article_page.dart';
 import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/auth/bloc/auth_state.dart';
-import 'package:konsul/features/auth/bloc/login_cubit.dart';
 import 'package:konsul/features/auth/presentations/sign_in_page.dart';
 import 'package:konsul/features/auth/presentations/sign_up_page.dart';
 import 'package:konsul/features/chat/presentations/chat_page.dart';
 import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
 import 'package:konsul/features/dosen/presentations/dosen_page.dart';
 import 'package:konsul/features/home/presentations/home_page.dart';
+import 'package:konsul/features/profile/bloc/profile_cubit.dart';
 import 'package:konsul/features/profile/presentations/profile_page.dart';
+import 'package:konsul/features/profile/presentations/update_profile_page.dart';
 import 'package:konsul/widgets/bottom_navigation_page.dart';
 
 class AppRouter {
@@ -138,6 +139,16 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        // parentNavigatorKey: tab5,
+        path: Destination.updateProfilePath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const UpdateProfilePage(),
+            state: state,
+          );
+        },
+      ),
     ];
 
     _router = GoRouter(
@@ -208,6 +219,7 @@ class Destination {
   static const String dosenPath = '/dosen';
   static const String chatPath = '/chat';
   static const String profilePath = '/profile';
+  static const String updateProfilePath = '/profile/update';
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {

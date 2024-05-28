@@ -19,35 +19,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   appBar: AppBar(
-    //       // title: const Text('Title'),
-    //       ),
-    //   body: Center(
-    //     child: Column(
-    //       children: [
-    //         const Text("Home"),
-    //         MyButton(
-    //             onPressed: () {
-    //               context.read<AuthCubit>().setUnauthenticated();
-    //             },
-    //             text: 'Logout'),
-    //       ],
-    //     ),
-    //   ),
-    // );
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              context.read<AuthCubit>().setUnauthenticated();
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Home')),
       body: LayoutBuilder(builder: (context, constraint) {
         return SingleChildScrollView(
           child: Column(
