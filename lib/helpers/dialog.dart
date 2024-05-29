@@ -52,12 +52,13 @@ void showDialogInfo(BuildContext mainContext, Function onYes,
   );
 }
 
-void showDialogConfirmationDelete(
+void showDialogConfirmation(
   BuildContext mainContext,
-  Function onDelete, {
+  Function onPositive, {
   String title = 'Confirmation',
   String message = 'Are you sure you want to delete this data?',
-  String errorBtn = 'Delete',
+  String positiveText = 'Konfirmasi',
+  String minusText = 'Batal',
   ButtonStyle? buttonStyle1,
   ButtonStyle? buttonStyle2,
 }) {
@@ -75,20 +76,29 @@ void showDialogConfirmationDelete(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text("Cancel"),
+            child: Text(minusText),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              onDelete();
+              onPositive();
             },
             style: buttonStyle2 ??
                 TextButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.error),
-            child: Text(errorBtn),
+            child: Text(positiveText),
           ),
         ],
       );
     },
+  );
+}
+
+showSnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      duration: const Duration(seconds: 2),
+    ),
   );
 }

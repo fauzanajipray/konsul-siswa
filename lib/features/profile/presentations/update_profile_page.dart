@@ -232,16 +232,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           type: TextFieldType.none,
                           textColor: Theme.of(context).colorScheme.onSurface,
                           onTap: () async => {
-                            // if (pickedDate != null) {
-                            //   String formattedDate =
-                            //       DateFormat('yyyy-MM-dd').format(pickedDate);
-                            //   setState(() {
-                            //     _dateController.text = formattedDate;
-                            //     request = request.copyWith(
-                            //       bookingDate: pickedDate,
-                            //     );
-                            //   });
-                            // }
                             showDatePicker(
                               context: context,
                               initialDate: DateTime.now(),

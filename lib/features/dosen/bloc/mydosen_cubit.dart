@@ -16,7 +16,6 @@ class MydosenCubit extends Cubit<MydosenState> {
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
       Map<String, dynamic> userData = userDoc.data() ?? {};
-      // UserLogin userLogin = UserLogin.fromJson(userData);
 
       String? uidPembimbing = userData['pembimbing'];
       if (uidPembimbing != null) {
@@ -28,10 +27,10 @@ class MydosenCubit extends Cubit<MydosenState> {
         Map<String, dynamic> dosenData = dosenDoc.data() ?? {};
         UserLogin userLogin = UserLogin.fromJson(dosenData);
 
-        emit(state.copyWith(status: LoadStatus.success, user: userLogin));
+        emit(state.copyWith(
+            status: LoadStatus.success,
+            user: userLogin.copyWith(id: uidPembimbing)));
         return;
-        // }
-        // return;
       }
       throw FirebaseAuthException(code: 'empty-data');
     } on FirebaseAuthException catch (e) {
@@ -50,8 +49,6 @@ class MydosenCubit extends Cubit<MydosenState> {
   Future<void> setDosen(String uid, String uidDosen) async {
     emit(state.copyWith(status: LoadStatus.loading));
     try {
-      // Set dosen pembimbing uid to users that uid = uid
-
       await FirebaseFirestore.instance.collection('users').doc(uid).update({
         'pembimbing': uidDosen,
       });
@@ -60,7 +57,6 @@ class MydosenCubit extends Cubit<MydosenState> {
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
       Map<String, dynamic> userData = userDoc.data() ?? {};
-      // UserLogin userLogin = UserLogin.fromJson(userData);
 
       String? uidPembimbing = userData['pembimbing'];
       if (uidPembimbing != null) {

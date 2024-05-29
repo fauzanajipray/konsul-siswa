@@ -9,10 +9,11 @@ import 'package:konsul/features/auth/bloc/auth_state.dart';
 import 'package:konsul/features/auth/presentations/sign_in_page.dart';
 import 'package:konsul/features/auth/presentations/sign_up_page.dart';
 import 'package:konsul/features/chat/presentations/chat_page.dart';
+import 'package:konsul/features/dosen/bloc/add_promise_cubit.dart';
 import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
+import 'package:konsul/features/dosen/presentations/dosen_avail_select_page.dart';
 import 'package:konsul/features/dosen/presentations/dosen_page.dart';
 import 'package:konsul/features/home/presentations/home_page.dart';
-import 'package:konsul/features/profile/bloc/profile_cubit.dart';
 import 'package:konsul/features/profile/presentations/profile_page.dart';
 import 'package:konsul/features/profile/presentations/update_profile_page.dart';
 import 'package:konsul/widgets/bottom_navigation_page.dart';
@@ -67,10 +68,7 @@ class AppRouter {
                 path: Destination.dosenPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: BlocProvider<MydosenCubit>(
-                      create: (context) => MydosenCubit(),
-                      child: const DosenPage(),
-                    ),
+                    child: const DosenPage(),
                     state: state,
                   );
                 },
@@ -149,6 +147,16 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        path: Destination.dosenAvailSelectPath,
+        pageBuilder: (context, state) {
+          return getPage(
+            child: const DosenAvailSelectPage(),
+            state: state,
+          );
+        },
+      ),
     ];
 
     _router = GoRouter(
@@ -217,6 +225,7 @@ class Destination {
   static const String articlePath = '/article';
   static const String addArticlePath = '/add-article';
   static const String dosenPath = '/dosen';
+  static const String dosenAvailSelectPath = '/dosen-avail-select';
   static const String chatPath = '/chat';
   static const String profilePath = '/profile';
   static const String updateProfilePath = '/profile/update';

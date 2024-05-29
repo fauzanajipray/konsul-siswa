@@ -20,6 +20,7 @@ class MyTextField extends StatefulWidget {
   final bool filled;
   final bool readOnly;
   final Color? textColor;
+  final Color? fillColor;
 
   const MyTextField({
     super.key,
@@ -36,6 +37,7 @@ class MyTextField extends StatefulWidget {
     this.onEditingComplete,
     this.filled = true,
     this.textColor,
+    this.fillColor,
     this.onChange,
     this.validator,
     this.readOnly = false,
@@ -149,6 +151,7 @@ class MyTextFieldState extends State<MyTextField> {
           borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
         ),
         filled: widget.filled,
+        fillColor: (widget.fillColor != null) ? widget.fillColor : null,
         labelText: widget.labelText,
         hintText: widget.hintText,
         errorText: widget.errorText,

@@ -5,6 +5,7 @@ class UserLogin {
   final String? email;
   final String? name;
   final String? nisn;
+  final String? nip;
   final String? type;
   final String? pembimbing;
 
@@ -13,9 +14,30 @@ class UserLogin {
     this.email,
     this.name,
     this.nisn,
+    this.nip,
     this.type,
     this.pembimbing,
   });
+
+  UserLogin copyWith({
+    String? id,
+    String? email,
+    String? name,
+    String? nisn,
+    String? nip,
+    String? type,
+    String? pembimbing,
+  }) {
+    return UserLogin(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      nisn: nisn ?? this.nisn,
+      nip: nip ?? this.nip,
+      type: type ?? this.type,
+      pembimbing: pembimbing ?? this.pembimbing,
+    );
+  }
 
   factory UserLogin.fromRawJson(String id, String str) =>
       UserLogin.fromJson(json.decode(str));
@@ -27,6 +49,7 @@ class UserLogin {
         email: json["email"] ?? '',
         name: json["name"] ?? '',
         nisn: json["nisn"] ?? '',
+        nip: json["nip"] ?? '',
         type: json["type"] ?? '',
         pembimbing: json["pembimbing"] ?? '',
       );
@@ -36,6 +59,7 @@ class UserLogin {
         "email": email,
         "name": name,
         "nisn": nisn,
+        "nip": nip,
         "type": type,
         "pembimbing": pembimbing,
       };

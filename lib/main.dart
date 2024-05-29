@@ -8,6 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/auth/bloc/auth_state.dart';
+import 'package:konsul/features/dosen/bloc/add_promise_cubit.dart';
+import 'package:konsul/features/dosen/bloc/avail_cubit.dart';
+import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
 import 'package:konsul/features/profile/bloc/profile_cubit.dart';
 import 'package:konsul/firebase_options.dart';
 import 'package:konsul/services/app_router.dart';
@@ -61,7 +64,10 @@ class _AppState extends State<App> {
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => _authCubit),
-          BlocProvider<ProfileCubit>(create: (context) => ProfileCubit())
+          BlocProvider<ProfileCubit>(create: (context) => ProfileCubit()),
+          BlocProvider<MydosenCubit>(create: (context) => MydosenCubit()),
+          BlocProvider<AddPromiseCubit>(create: (context) => AddPromiseCubit()),
+          BlocProvider<AvailCubit>(create: (context) => AvailCubit()),
         ],
         child: BlocListener<AuthCubit, AuthState>(
           listenWhen: (previousState, state) {

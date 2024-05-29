@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
 import 'package:konsul/features/dosen/bloc/mydosen_state.dart';
 import 'package:konsul/helpers/dialog.dart';
 import 'package:konsul/helpers/helpers.dart';
+import 'package:konsul/services/app_router.dart';
 import 'package:konsul/utils/load_status.dart';
 
 class DosenPage extends StatefulWidget {
@@ -36,8 +39,7 @@ class _DosenPageState extends State<DosenPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            BlocConsumer<MydosenCubit, MydosenState>(
-              listener: (context, state) {},
+            BlocBuilder<MydosenCubit, MydosenState>(
               builder: (context, state) {
                 if (state.status == LoadStatus.loading) {
                   return const Center(child: CircularProgressIndicator());
@@ -64,8 +66,47 @@ class _DosenPageState extends State<DosenPage> {
                     margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: InkWell(
                       onTap: () {
-                        // Implementasikan fungsi onTap di sini
-                        print("Card tapped");
+                        // TODO : Implementasikan fungsi onTap di sini
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (ctx) {
+                            return SafeArea(
+                              child: CupertinoActionSheet(
+                                actions: [
+                                  CupertinoActionSheetAction(
+                                    onPressed: () async {
+                                      Navigator.of(ctx).pop();
+                                      context.push(
+                                          Destination.dosenAvailSelectPath);
+                                    },
+                                    child: const Text('Jadwalkan Konsultasi'),
+                                  ),
+                                  CupertinoActionSheetAction(
+                                    onPressed: () async {
+                                      Navigator.of(ctx).pop();
+                                      //
+                                    },
+                                    child: Text('Hapus',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error)),
+                                  ),
+                                ],
+                                cancelButton: CupertinoActionSheetAction(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text('Cancel',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error)),
+                                ),
+                              ),
+                            );
+                          },
+                        );
                       },
                       borderRadius: BorderRadius.circular(10),
                       child: Padding(
@@ -153,7 +194,7 @@ class _DosenPageState extends State<DosenPage> {
                     .limit(4) // Ambil hanya 4 data
                     .snapshots(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError || snapshot.data == null) {
+                  if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   }
 
@@ -257,7 +298,7 @@ class _DosenPageState extends State<DosenPage> {
                             ),
                             trailing: const Icon(Icons.keyboard_arrow_right),
                             onTap: () {
-                              showDialogConfirmationDelete(
+                              showDialogConfirmation(
                                 context,
                                 () => context.read<MydosenCubit>().setDosen(
                                       BlocProvider.of<AuthCubit>(context)
@@ -268,7 +309,7 @@ class _DosenPageState extends State<DosenPage> {
                                     ),
                                 message:
                                     'Apakah ingin mennganti dosen pembimbing dengan $name?',
-                                errorBtn: 'Confirm',
+                                positiveText: 'Confirm',
                               );
                             },
                           ),

@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+
+String formatTimestampToTime(Timestamp timestamp) {
+  DateTime dateTime = timestamp.toDate();
+  return DateFormat('HH:mm').format(dateTime);
+}
 
 String capitalize(String text) {
   if (text.isEmpty) return text;
