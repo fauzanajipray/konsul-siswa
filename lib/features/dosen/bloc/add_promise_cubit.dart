@@ -18,6 +18,8 @@ class AddPromiseCubit extends Cubit<DataState> {
         'siswaId': siswaId,
         'date': dateTime,
         'status': 'pending',
+        'createdAt': DateTime.now(),
+        'updatedAt': DateTime.now(),
       });
       emit(state.copyWith(status: LoadStatus.success));
     } catch (e) {

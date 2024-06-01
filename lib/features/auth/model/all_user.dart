@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class UserLogin {
+class AllUser {
   final String? id;
   final String? email;
   final String? name;
@@ -9,7 +9,7 @@ class UserLogin {
   final String? type;
   final String? pembimbing;
 
-  UserLogin({
+  AllUser({
     this.id,
     this.email,
     this.name,
@@ -19,7 +19,7 @@ class UserLogin {
     this.pembimbing,
   });
 
-  UserLogin copyWith({
+  AllUser copyWith({
     String? id,
     String? email,
     String? name,
@@ -28,7 +28,7 @@ class UserLogin {
     String? type,
     String? pembimbing,
   }) {
-    return UserLogin(
+    return AllUser(
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
@@ -39,12 +39,12 @@ class UserLogin {
     );
   }
 
-  factory UserLogin.fromRawJson(String id, String str) =>
-      UserLogin.fromJson(json.decode(str));
+  factory AllUser.fromRawJson(String id, String str) =>
+      AllUser.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory UserLogin.fromJson(Map<String, dynamic> json) => UserLogin(
+  factory AllUser.fromJson(Map<String, dynamic> json) => AllUser(
         id: json["id"] ?? '',
         email: json["email"] ?? '',
         name: json["name"] ?? '',

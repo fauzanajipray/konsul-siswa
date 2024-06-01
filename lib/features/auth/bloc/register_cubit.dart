@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:konsul/features/auth/bloc/register_state.dart';
-import 'package:konsul/features/auth/model/user_login.dart';
+import 'package:konsul/features/auth/model/all_user.dart';
 import 'package:konsul/utils/load_status.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
@@ -35,7 +35,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         // Update the state with the newly created user
         emit(state.copyWith(
           status: LoadStatus.success,
-          user: UserLogin(id: userId, email: email, name: nama, nisn: nisn),
+          user: AllUser(id: userId, email: email, name: nama, nisn: nisn),
           error: null,
         ));
       } else {

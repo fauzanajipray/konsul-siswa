@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:konsul/features/auth/model/user_login.dart';
+import 'package:konsul/features/auth/model/all_user.dart';
 import 'package:konsul/utils/load_status.dart';
 
 class LoginState extends Equatable {
@@ -15,14 +15,14 @@ class LoginState extends Equatable {
   final LoadStatus status;
   final User? user;
   final String? userId;
-  final UserLogin? data;
+  final AllUser? data;
   final String? error;
 
   LoginState copyWith({
     LoadStatus? status,
     User? user,
     String? userId,
-    UserLogin? data,
+    AllUser? data,
     String? error,
   }) {
     return LoginState(

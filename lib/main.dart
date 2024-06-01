@@ -67,7 +67,7 @@ class _AppState extends State<App> {
           BlocProvider<ProfileCubit>(create: (context) => ProfileCubit()),
           BlocProvider<MydosenCubit>(create: (context) => MydosenCubit()),
           BlocProvider<AddPromiseCubit>(create: (context) => AddPromiseCubit()),
-          BlocProvider<AvailCubit>(create: (context) => AvailCubit()),
+          // BlocProvider<AvailCubit>(create: (context) => AvailCubit()),
         ],
         child: BlocListener<AuthCubit, AuthState>(
           listenWhen: (previousState, state) {

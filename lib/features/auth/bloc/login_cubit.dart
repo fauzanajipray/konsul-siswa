@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:konsul/features/auth/bloc/login_state.dart';
-import 'package:konsul/features/auth/model/user_login.dart';
+import 'package:konsul/features/auth/model/all_user.dart';
 import 'package:konsul/utils/load_status.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -23,7 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
           .get();
 
       Map<String, dynamic> userData = userDoc.data() ?? {};
-      UserLogin userLogin = UserLogin.fromJson(userData);
+      AllUser userLogin = AllUser.fromJson(userData);
       if (userLogin.type == "siswa") {
         emit(state.copyWith(
             status: LoadStatus.success,

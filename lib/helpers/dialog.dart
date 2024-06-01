@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-void showDialogMsg(BuildContext mainContext, String errorMessage,
+void showDialogMsg(BuildContext mainContext, String? errorMessage,
     {String title = 'Error'}) {
   showAdaptiveDialog(
     context: mainContext,
     builder: (context) => AlertDialog(
       scrollable: true,
       title: Text(title),
-      content: Text(errorMessage),
+      content: Text(errorMessage ?? 'Terjadi sebuah kesalahan'),
       actions: [
         TextButton(
           onPressed: () {

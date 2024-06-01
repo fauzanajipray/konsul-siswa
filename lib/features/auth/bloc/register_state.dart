@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:konsul/features/auth/model/user_login.dart';
+import 'package:konsul/features/auth/model/all_user.dart';
 import 'package:konsul/utils/load_status.dart';
 
 class RegisterState extends Equatable {
@@ -10,14 +10,14 @@ class RegisterState extends Equatable {
   });
 
   final LoadStatus status;
-  final UserLogin? user;
+  final AllUser? user;
   final String? error;
 
   RegisterState copyWith(
       {LoadStatus? status,
       Map<String, dynamic>? data,
       String? error,
-      UserLogin? user}) {
+      AllUser? user}) {
     return RegisterState(
       status: status ?? this.status,
       user: user ?? this.user,

@@ -148,7 +148,7 @@ class AppRouter {
         },
       ),
       GoRoute(
-        parentNavigatorKey: parentNavigatorKey,
+        // parentNavigatorKey: parentNavigatorKey,
         path: Destination.dosenAvailSelectPath,
         pageBuilder: (context, state) {
           return getPage(
