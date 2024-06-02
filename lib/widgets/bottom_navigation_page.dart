@@ -42,10 +42,10 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             label: 'Pembimbing',
           ),
           // Chat Page
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.chat),
+          //   label: 'Chat',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',

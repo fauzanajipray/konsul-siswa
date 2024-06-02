@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 String formatTimestampToTime(Timestamp timestamp) {
@@ -20,7 +21,20 @@ String formatDateTimeCustom(DateTime? dateTime,
   if (dateTime == null) {
     return ifnull;
   } else {
-    final DateFormat formatter = DateFormat(format, "en_US");
+    final DateFormat formatter = DateFormat(format, "id_ID");
     return formatter.format(dateTime);
+  }
+}
+
+Color? getColorStatus(String? status) {
+  switch (status) {
+    case 'pending':
+      return Colors.blue;
+    case 'accepted':
+      return Colors.green;
+    case 'rejected':
+      return Colors.red;
+    default:
+      return null;
   }
 }

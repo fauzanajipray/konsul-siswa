@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         const SizedBox(height: 8),
                         ...snapshot.data!.docs.map((DocumentSnapshot document) {
-                          return ArticleItem(article: document, index: 0);
+                          return ArticleItem(article: document);
                         }),
                         Container(
                           color: Theme.of(context).colorScheme.primary,

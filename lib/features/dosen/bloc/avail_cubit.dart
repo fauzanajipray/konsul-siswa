@@ -14,12 +14,12 @@ class AvailCubit extends Cubit<DataState<Promise>> {
           .collection('promises')
           .where('dosenId', isEqualTo: dosenId)
           .where('siswaId', isEqualTo: siswaId)
-          .where('status', isEqualTo: 'pending')
-          .get();
+          .where('status', whereIn: ['pending', 'accepted']).get();
 
       if (docs.docs.isNotEmpty) {
         Map<String, dynamic> data = docs.docs.first.data();
-        Promise promise = Promise.fromJson(data);
+        String uid = docs.docs.first.id;
+        Promise promise = Promise.fromJson(data).copyWith(id: uid);
 
         emit(state.copyWith(
           status: LoadStatus.success,
@@ -36,6 +36,20 @@ class AvailCubit extends Cubit<DataState<Promise>> {
         status: LoadStatus.failure,
         error: e.toString(),
       ));
+    }
+  }
+
+  Future<void> delete(String? uid) async {
+    emit(state.copyWith(status: LoadStatus.loading));
+    try {
+      await FirebaseFirestore.instance.collection('promises').doc(uid).delete();
+
+      emit(const DataState(
+        status: LoadStatus.success,
+        item: null,
+      ));
+    } catch (e) {
+      emit(state.copyWith(status: LoadStatus.failure, error: e.toString()));
     }
   }
 }

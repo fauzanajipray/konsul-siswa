@@ -8,7 +8,9 @@ import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/auth/bloc/auth_state.dart';
 import 'package:konsul/features/auth/presentations/sign_in_page.dart';
 import 'package:konsul/features/auth/presentations/sign_up_page.dart';
+import 'package:konsul/features/chat/cubit/room_cubit.dart';
 import 'package:konsul/features/chat/presentations/chat_page.dart';
+import 'package:konsul/features/chat/presentations/error_data_not_found_page.dart';
 import 'package:konsul/features/dosen/bloc/add_promise_cubit.dart';
 import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
 import 'package:konsul/features/dosen/presentations/dosen_avail_select_page.dart';
@@ -75,22 +77,22 @@ class AppRouter {
               ),
             ],
           ),
+          // StatefulShellBranch(
+          //   navigatorKey: tab4,
+          //   routes: [
+          //     GoRoute(
+          //       path: Destination.chatPath,
+          //       pageBuilder: (context, state) {
+          //         return getPage(
+          //           child: const ChatPage(),
+          //           state: state,
+          //         );
+          //       },
+          //     ),
+          //   ],
+          // ),
           StatefulShellBranch(
             navigatorKey: tab4,
-            routes: [
-              GoRoute(
-                path: Destination.chatPath,
-                pageBuilder: (context, state) {
-                  return getPage(
-                    child: const ChatPage(),
-                    state: state,
-                  );
-                },
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            navigatorKey: tab5,
             routes: [
               GoRoute(
                 path: Destination.profilePath,
@@ -155,6 +157,22 @@ class AppRouter {
             child: const DosenAvailSelectPage(),
             state: state,
           );
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: parentNavigatorKey,
+        name: 'Chat Mahasiswa',
+        path: Destination.chatPath,
+        builder: (context, state) {
+          String? uid = state.pathParameters['id'];
+          print("On Route : $uid");
+          if (uid != null) {
+            return BlocProvider<RoomCubit>(
+              create: (context) => RoomCubit(),
+              child: ChatPage(uid),
+            );
+          }
+          return const ErrorDataNotFoundPage('ID Room is NULL');
         },
       ),
     ];
@@ -226,7 +244,7 @@ class Destination {
   static const String addArticlePath = '/add-article';
   static const String dosenPath = '/dosen';
   static const String dosenAvailSelectPath = '/dosen-avail-select';
-  static const String chatPath = '/chat';
+  static const String chatPath = '/chat/:id';
   static const String profilePath = '/profile';
   static const String updateProfilePath = '/profile/update';
 }

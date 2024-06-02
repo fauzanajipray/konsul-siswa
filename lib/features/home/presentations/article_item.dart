@@ -5,11 +5,9 @@ class ArticleItem extends StatelessWidget {
   const ArticleItem({
     super.key,
     required this.article,
-    required this.index,
   });
 
   final DocumentSnapshot<Object?>? article;
-  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class ArticleItem extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: (index == 0) ? 8 : 4, bottom: 4),
+            margin: const EdgeInsets.only(top: 4, bottom: 4),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,

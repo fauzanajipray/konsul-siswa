@@ -27,15 +27,13 @@ void showDialogMsg(BuildContext mainContext, String? errorMessage,
 }
 
 void showDialogInfo(BuildContext mainContext, Function onYes,
-    {String title = 'Info',
-    String message = 'Success',
-    String errorBtn = 'Ok'}) {
+    {String title = 'Info', String? message, String errorBtn = 'Ok'}) {
   showAdaptiveDialog(
     context: mainContext,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(title),
-        content: Text(message),
+        content: Text(message ?? 'Success'),
         actions: [
           TextButton(
             onPressed: () {
@@ -53,17 +51,18 @@ void showDialogInfo(BuildContext mainContext, Function onYes,
 }
 
 void showDialogConfirmation(
-  BuildContext mainContext,
+  BuildContext context,
   Function onPositive, {
-  String title = 'Confirmation',
+  String title = 'Konfirmasi',
   String message = 'Are you sure you want to delete this data?',
-  String positiveText = 'Konfirmasi',
+  String positiveText = 'Ya',
   String minusText = 'Batal',
   ButtonStyle? buttonStyle1,
   ButtonStyle? buttonStyle2,
+  Function? onMinus,
 }) {
   showAdaptiveDialog(
-    context: mainContext,
+    context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text(title),
@@ -75,6 +74,7 @@ void showDialogConfirmation(
                     foregroundColor: Theme.of(context).colorScheme.outline),
             onPressed: () {
               Navigator.of(context).pop();
+              onMinus?.call();
             },
             child: Text(minusText),
           ),

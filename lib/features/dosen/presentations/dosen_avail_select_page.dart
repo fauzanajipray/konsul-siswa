@@ -12,6 +12,7 @@ import 'package:konsul/features/dosen/model/promise.dart';
 import 'package:konsul/features/profile/bloc/data_state.dart';
 import 'package:konsul/helpers/dialog.dart';
 import 'package:konsul/helpers/helpers.dart';
+import 'package:konsul/services/app_router.dart';
 import 'package:konsul/utils/load_status.dart';
 import 'package:konsul/widgets/loading_progress.dart';
 import 'package:konsul/widgets/my_button.dart';
@@ -34,6 +35,10 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
   void initState() {
     super.initState();
     userId = context.read<AuthCubit>().state.userId;
+    initAsync();
+  }
+
+  initAsync() {
     context
         .read<MydosenCubit>()
         .getDosen(BlocProvider.of<AuthCubit>(context).state.userId ?? '');
@@ -58,6 +63,10 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
           listener: (context, state) {
             if (state.status == LoadStatus.success) {
               context.read<AvailCubit>().get(state.user?.id, userId);
+            } else if (state.status == LoadStatus.failure) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                showSnackBar(context, "${state.error}");
+              });
             }
           },
           builder: (context, state) {
@@ -85,7 +94,7 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     showSnackBar(
                         context, "Berhasil menambahkan jadwal bimbingan");
-                    context.pop();
+                    initAsync();
                   });
                 }
               },
@@ -173,7 +182,7 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                                 ),
                               ),
                             ),
-                            buildAvail(context, state, stateAvail),
+                            buildAvail(context, state, stateAvail, userId),
                           ],
                         ),
                       ),
@@ -190,11 +199,8 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
     );
   }
 
-  Widget buildAvail(
-    BuildContext context,
-    MydosenState state,
-    DataState<Promise> stateAvail,
-  ) {
+  Widget buildAvail(BuildContext context, MydosenState state,
+      DataState<Promise> stateAvail, String? studentId) {
     if (stateAvail.item == null) {
       return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -350,69 +356,211 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
         },
       );
     } else {
-      return Container(
-        padding: const EdgeInsets.all(16.0),
-        margin: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        constraints: const BoxConstraints(maxWidth: 600),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-              blurRadius: 10,
-              spreadRadius: 0,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            Text(
-                'Konseling diadakan pada ${formatDateTimeCustom(stateAvail.item?.date, format: 'EEEE, d MMM yyyy HH:mm')}'),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: MyButton(
-                    onPressed: () {
-                      if (stateAvail.item?.status != 'pending') {
-                        //
-                        showSnackBar(context, 'Konseling sedang diproses');
-                      } else {
-                        //
-                        showSnackBar(context, 'Konseling sedang diproses');
-                      }
-                    },
-                    text: 'Batalkan',
-                    verticalPadding: 12,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+      return Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            margin: const EdgeInsets.all(16.0),
+            width: double.infinity,
+            constraints: const BoxConstraints(maxWidth: 600),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                  blurRadius: 10,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 4),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: MyButton(
-                    onPressed: () {
-                      if (stateAvail.item?.status == 'pending') {
-                        //
-                        showSnackBar(context, 'Konseling sedang diproses');
-                      } else {
-                        //
-                        showSnackBar(context, 'Konseling sedang diproses');
-                      }
-                    },
-                    text: 'Konseling',
-                    verticalPadding: 12,
-                  ),
-                )
               ],
             ),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  capitalize(stateAvail.item?.status ?? ''),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                      color: getColorStatus(stateAvail.item?.status)),
+                ),
+                Text(
+                    'Konseling diadakan pada ${formatDateTimeCustom(stateAvail.item?.date, format: 'EEEE, d MMM yyyy HH:mm')}'),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: MyButton(
+                        onPressed: () {
+                          if (stateAvail.item?.status == 'pending') {
+                            showDialogConfirmation(
+                              context,
+                              () {
+                                context
+                                    .read<AvailCubit>()
+                                    .delete(stateAvail.item?.id);
+                              },
+                              message:
+                                  'Apakah anda yakin ingin membatalkan konseling?',
+                            );
+                          } else {
+                            //
+                            showSnackBar(context, 'Konseling sedang diproses');
+                          }
+                        },
+                        text: 'Batalkan',
+                        verticalPadding: 12,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: MyButton(
+                        onPressed: () {
+                          if (stateAvail.item?.status == 'accepted') {
+                            DateTime? date = stateAvail.item?.date;
+                            if (date != null && date.isBefore(DateTime.now())) {
+                              context.push(
+                                  Destination.chatPath.replaceAll(
+                                      ':id', stateAvail.item?.roomId ?? ':id'),
+                                  extra: stateAvail.item?.roomId);
+                            } else {
+                              showDialogInfo(context, () {},
+                                  message: 'Konseling sudah lewat waktu');
+                            }
+                          }
+                        },
+                        text: 'Konseling',
+                        verticalPadding: 12,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: Text('History',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary)),
+          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('promises')
+                .where('siswaId', isEqualTo: studentId)
+                .where('status',
+                    whereIn: ['completed', 'rejected']).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    padding: const EdgeInsets.all(16),
+                    child: const Center(child: CircularProgressIndicator()));
+              }
+
+              if (snapshot.data!.docs.isEmpty) {
+                return Container(
+                  height: 80,
+                  color: Theme.of(context).colorScheme.primary,
+                  child: const Center(
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              }
+
+              return Column(
+                children: [
+                  const SizedBox(),
+                  ...snapshot.data!.docs.map((DocumentSnapshot document) {
+                    String uid = document.id;
+                    Promise promise = Promise.fromJson(
+                            document.data() as Map<String, dynamic>)
+                        .copyWith(id: uid);
+                    return HistoryPromise(
+                      promise: promise,
+                    );
+                  }),
+                ],
+              );
+            },
+          ),
+        ],
       );
     }
+  }
+}
+
+class HistoryPromise extends StatelessWidget {
+  const HistoryPromise({
+    super.key,
+    required this.promise,
+  });
+  final Promise promise;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 4, bottom: 4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(8.0),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 4.0,
+                  spreadRadius: 2.0,
+                ),
+              ],
+            ),
+            child: ListTile(
+              title: Text(
+                capitalize(promise.status ?? ''),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: getColorStatus(promise.status)),
+              ),
+              subtitle: Text(
+                formatDateTimeCustom(promise.updatedAt),
+                maxLines: 4,
+                style: TextStyle(
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                    color: Theme.of(context).colorScheme.outlineVariant),
+              ),
+              trailing: const Icon(Icons.keyboard_arrow_right),
+              onTap: () {
+                if (promise.status == 'rejected') {
+                  showDialogInfo(
+                    context,
+                    () {},
+                    message: promise.reason,
+                    title: 'Alasan',
+                  );
+                } else if (promise.status == 'accepted') {
+                  // TODO : Accepted
+                }
+              },
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

@@ -9,7 +9,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/auth/bloc/auth_state.dart';
 import 'package:konsul/features/dosen/bloc/add_promise_cubit.dart';
-import 'package:konsul/features/dosen/bloc/avail_cubit.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:konsul/features/dosen/bloc/mydosen_cubit.dart';
 import 'package:konsul/features/profile/bloc/profile_cubit.dart';
 import 'package:konsul/firebase_options.dart';
@@ -33,6 +33,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await initializeDateFormatting('id_ID', null);
 
   // Mengatur preferensi orientasi layar
   await SystemChrome.setPreferredOrientations([
