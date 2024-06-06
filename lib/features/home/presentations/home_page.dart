@@ -7,6 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:konsul/features/auth/bloc/auth_cubit.dart';
 import 'package:konsul/features/auth/bloc/auth_state.dart';
 import 'package:konsul/features/home/presentations/article_item.dart';
+import 'package:konsul/features/profile/bloc/data_state.dart';
+import 'package:konsul/features/profile/bloc/profile_cubit.dart';
+import 'package:konsul/features/profile/model/profile.dart';
 import 'package:konsul/services/app_router.dart';
 import 'package:konsul/widgets/my_button.dart';
 
@@ -18,6 +21,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    initAsync();
+  }
+
+  void initAsync() async {
+    context
+        .read<ProfileCubit>()
+        .getProfile(BlocProvider.of<AuthCubit>(context).state.userId ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,48 +50,59 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      width: 60.0,
-                      height: 60.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2.0),
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/user.png',
-                          fit: BoxFit.cover,
+                    BlocBuilder<ProfileCubit, DataState<Profile>>(
+                        builder: (context, state) {
+                      String? imageUrl = state.item?.imageUrl;
+                      return Container(
+                        width: 60.0,
+                        height: 60.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2.0),
+                          color: Theme.of(context).colorScheme.tertiary,
                         ),
-                      ),
-                    ),
+                        child: CircleAvatar(
+                          radius: 80,
+                          backgroundImage: imageUrl != null
+                              ? NetworkImage(imageUrl) as ImageProvider<Object>
+                              : const AssetImage('assets/images/user.png')
+                                  as ImageProvider<Object>,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.outline,
+                        ),
+                      );
+                    }),
                     const SizedBox(width: 8),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(children: [
-                            const TextSpan(
-                              text: "Hai, ",
-                              style: TextStyle(fontWeight: FontWeight.normal),
-                            ),
-                            TextSpan(
-                              text: "${state.name}",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ]),
-                        ),
-                        Text(
-                          "Bagaimana perasaan mu hari ini? ",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontWeight: FontWeight.normal,
+                    BlocBuilder<ProfileCubit, DataState<Profile>>(
+                        builder: (context, stateProfile) {
+                      String? name = stateProfile.item?.name;
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: TextSpan(children: [
+                              const TextSpan(
+                                text: "Hai, ",
+                                style: TextStyle(fontWeight: FontWeight.normal),
+                              ),
+                              TextSpan(
+                                text: "${name ?? state.name}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ]),
                           ),
-                        ),
-                      ],
-                    ),
+                          Text(
+                            "Bagaimana perasaan mu hari ini? ",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ],
                 ),
               );

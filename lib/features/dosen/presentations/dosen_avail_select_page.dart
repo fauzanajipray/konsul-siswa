@@ -561,7 +561,8 @@ class HistoryPromise extends StatelessWidget {
                     color: getColorStatus(promise.status)),
               ),
               subtitle: Text(
-                formatDateTimeCustom(promise.updatedAt),
+                formatDateTimeCustom(promise.updatedAt,
+                    format: 'EEEE, d MMM yyyy HH:mm'),
                 maxLines: 4,
                 style: TextStyle(
                     fontSize: 12,
@@ -578,7 +579,10 @@ class HistoryPromise extends StatelessWidget {
                     title: 'Alasan',
                   );
                 } else if (promise.status == 'completed') {
-                  context.push(Destination.chatPath);
+                  context.push(
+                      Destination.chatPath
+                          .replaceAll(':id', promise.roomId ?? ':id'),
+                      extra: promise.roomId);
                 }
               },
             ),
