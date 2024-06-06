@@ -69,17 +69,17 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
               });
             }
           },
-          builder: (context, state) {
-            if (state.status == LoadStatus.loading) {
+          builder: (context, stateDosen) {
+            if (stateDosen.status == LoadStatus.loading) {
               return const LoadingProgress();
-            } else if (state.status == LoadStatus.failure) {
+            } else if (stateDosen.status == LoadStatus.failure) {
               return Container(
                 color: Theme.of(context).colorScheme.surface,
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 alignment: Alignment.center,
                 child: Text(
-                  '${state.error}',
+                  '${stateDosen.error}',
                   style: const TextStyle(),
                 ),
               );
@@ -152,7 +152,8 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                                             children: [
                                               Text(
                                                 capitalize(
-                                                    state.user?.name ?? ""),
+                                                    stateDosen.user?.name ??
+                                                        ""),
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .colorScheme
@@ -182,7 +183,7 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                                 ),
                               ),
                             ),
-                            buildAvail(context, state, stateAvail, userId),
+                            buildAvail(context, stateDosen, stateAvail, userId),
                           ],
                         ),
                       ),
@@ -201,159 +202,176 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
 
   Widget buildAvail(BuildContext context, MydosenState state,
       DataState<Promise> stateAvail, String? studentId) {
+    String? dosenId = state.user?.id;
     if (stateAvail.item == null) {
-      return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('schedules')
-            .where('userId', isEqualTo: state.user?.id)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
+      return Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text('Pilih Jadwal',
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary)),
+          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('schedules')
+                .where('userId', isEqualTo: state.user?.id)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-                padding: const EdgeInsets.all(16),
-                child: const Center(child: CircularProgressIndicator()));
-          }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    padding: const EdgeInsets.all(16),
+                    child: const Center(child: CircularProgressIndicator()));
+              }
 
-          if (snapshot.data!.docs.isEmpty) {
-            return Container(
-              height: 80,
-              color: Theme.of(context).colorScheme.primary,
-              child: const Center(
-                child: Text(
-                  'No data found',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            );
-          }
+              if (snapshot.data!.docs.isEmpty) {
+                return Container(
+                  height: 80,
+                  color: Theme.of(context).colorScheme.primary,
+                  child: const Center(
+                    child: Text(
+                      'No data found',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              }
 
-          return Container(
-            color: Theme.of(context).colorScheme.primary,
-            width: double.infinity,
-            padding: const EdgeInsets.only(top: 16),
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: snapshot.data?.docs.length,
-              itemBuilder: (context, index) {
-                DocumentSnapshot? doc = snapshot.data?.docs[index];
-                String uid = doc?.id ?? '';
+              return Container(
+                color: Theme.of(context).colorScheme.primary,
+                width: double.infinity,
+                padding: const EdgeInsets.only(top: 16),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot? doc = snapshot.data?.docs[index];
+                    String uid = doc?.id ?? '';
 
-                Timestamp? timestamp =
-                    (doc?.data() as Map<String, dynamic>).containsKey('time')
+                    Timestamp? timestamp = (doc?.data() as Map<String, dynamic>)
+                            .containsKey('time')
                         ? doc!['time']
                         : null;
 
-                return Container(
-                  margin: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4.0,
-                        spreadRadius: 2.0,
+                    return Container(
+                      margin: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 4.0,
+                            spreadRadius: 2.0,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: ListTile(
-                    minVerticalPadding: 5,
-                    title: Text(
-                      timestamp != null
-                          ? formatTimestampToTime(timestamp)
-                          : 'No Time',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Theme.of(context).colorScheme.onSurface),
-                    ),
-                    trailing: const Icon(Icons.keyboard_arrow_right),
-                    onTap: () {
-                      showAdaptiveDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Pilih Jadwal'),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                MyTextField(
-                                  controller: _dateController,
-                                  labelText: 'Tanggal',
-                                  type: TextFieldType.none,
-                                  fillColor: Colors.white,
-                                  textColor:
-                                      Theme.of(context).colorScheme.onSurface,
-                                  onTap: () async => {
-                                    showDatePicker(
-                                      context: context,
-                                      initialDate: _dateTime ?? DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime(2100),
-                                    ).then((value) {
-                                      if (value != null) {
-                                        setState(() {
-                                          _dateController.text =
-                                              DateFormat('dd-MM-yyyy')
-                                                  .format(value);
-                                          _dateTime = value;
-                                        });
-                                      }
-                                    })
-                                  },
-                                ),
-                                const SizedBox(height: 16),
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: SizedBox(
-                                    width: 100,
-                                    child: MyButton(
-                                      typeButton: TypeButton.elevated,
-                                      textColor:
-                                          Theme.of(context).colorScheme.primary,
-                                      verticalPadding: 8,
-                                      onPressed: () {
-                                        if (_dateTime == null ||
-                                            timestamp == null) {
-                                          showSnackBar(context,
-                                              'Tanggal tidak boleh kosong');
-                                          return;
-                                        } else {
-                                          context
-                                              .read<AddPromiseCubit>()
-                                              .saveData(
-                                                _dateTime!,
-                                                timestamp,
-                                                state.user?.id,
-                                                context
-                                                    .read<AuthCubit>()
-                                                    .state
-                                                    .userId,
-                                              );
-                                          context.pop();
-                                        }
+                      child: ListTile(
+                        minVerticalPadding: 5,
+                        title: Text(
+                          timestamp != null
+                              ? formatTimestampToTime(timestamp)
+                              : 'No Time',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).colorScheme.onSurface),
+                        ),
+                        trailing: const Icon(Icons.keyboard_arrow_right),
+                        onTap: () {
+                          showAdaptiveDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Pilih Jadwal'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    MyTextField(
+                                      controller: _dateController,
+                                      labelText: 'Tanggal',
+                                      type: TextFieldType.none,
+                                      fillColor: Colors.white,
+                                      textColor: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                      onTap: () async => {
+                                        showDatePicker(
+                                          context: context,
+                                          initialDate:
+                                              _dateTime ?? DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime(2100),
+                                        ).then((value) {
+                                          if (value != null) {
+                                            setState(() {
+                                              _dateController.text =
+                                                  DateFormat('dd-MM-yyyy')
+                                                      .format(value);
+                                              _dateTime = value;
+                                            });
+                                          }
+                                        })
                                       },
-                                      text: 'Pilih',
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
+                                    const SizedBox(height: 16),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: SizedBox(
+                                        width: 100,
+                                        child: MyButton(
+                                          typeButton: TypeButton.elevated,
+                                          textColor: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          verticalPadding: 8,
+                                          onPressed: () {
+                                            if (_dateTime == null ||
+                                                timestamp == null) {
+                                              showSnackBar(context,
+                                                  'Tanggal tidak boleh kosong');
+                                              return;
+                                            } else {
+                                              context
+                                                  .read<AddPromiseCubit>()
+                                                  .saveData(
+                                                    _dateTime!,
+                                                    timestamp,
+                                                    state.user?.id,
+                                                    context
+                                                        .read<AuthCubit>()
+                                                        .state
+                                                        .userId,
+                                                  );
+                                              context.pop();
+                                            }
+                                          },
+                                          text: 'Pilih',
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          );
-        },
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+          ...buildListHistory(studentId, dosenId)
+        ],
       );
     } else {
       return Column(
@@ -406,7 +424,6 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                                   'Apakah anda yakin ingin membatalkan konseling?',
                             );
                           } else {
-                            //
                             showSnackBar(context, 'Konseling sedang diproses');
                           }
                         },
@@ -428,7 +445,8 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                                   extra: stateAvail.item?.roomId);
                             } else {
                               showDialogInfo(context, () {},
-                                  message: 'Konseling sudah lewat waktu');
+                                  message:
+                                      'Konseling diadakan pada ${formatDateTimeCustom(stateAvail.item?.date, format: 'EEEE, d MMM yyyy HH:mm')}');
                             }
                           }
                         },
@@ -441,64 +459,70 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
               ],
             ),
           ),
-          const Divider(),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: Text('History',
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.onPrimary)),
-          ),
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('promises')
-                .where('siswaId', isEqualTo: studentId)
-                .where('status',
-                    whereIn: ['completed', 'rejected']).snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                    padding: const EdgeInsets.all(16),
-                    child: const Center(child: CircularProgressIndicator()));
-              }
-
-              if (snapshot.data!.docs.isEmpty) {
-                return Container(
-                  height: 80,
-                  color: Theme.of(context).colorScheme.primary,
-                  child: const Center(
-                    child: Text(
-                      'No data found',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                );
-              }
-
-              return Column(
-                children: [
-                  const SizedBox(),
-                  ...snapshot.data!.docs.map((DocumentSnapshot document) {
-                    String uid = document.id;
-                    Promise promise = Promise.fromJson(
-                            document.data() as Map<String, dynamic>)
-                        .copyWith(id: uid);
-                    return HistoryPromise(
-                      promise: promise,
-                    );
-                  }),
-                ],
-              );
-            },
-          ),
+          ...buildListHistory(studentId, dosenId),
         ],
       );
     }
+  }
+
+  List<Widget> buildListHistory(String? studentId, String? dosenId) {
+    return [
+      const Divider(),
+      Container(
+        padding: const EdgeInsets.all(8),
+        child: Text('History',
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.onPrimary)),
+      ),
+      StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('promises')
+            .where('siswaId', isEqualTo: studentId)
+            .where('dosenId', isEqualTo: dosenId)
+            .where('status', whereIn: ['completed', 'rejected']).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+                padding: const EdgeInsets.all(16),
+                child: const Center(child: CircularProgressIndicator()));
+          }
+
+          if (snapshot.data!.docs.isEmpty) {
+            return Container(
+              height: 80,
+              color: Theme.of(context).colorScheme.primary,
+              child: const Center(
+                child: Text(
+                  'No data found',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          }
+
+          return Column(
+            children: [
+              const SizedBox(),
+              ...snapshot.data!.docs.map((DocumentSnapshot document) {
+                String uid = document.id;
+                Promise promise =
+                    Promise.fromJson(document.data() as Map<String, dynamic>)
+                        .copyWith(id: uid);
+                return HistoryPromise(
+                  promise: promise,
+                );
+              }),
+            ],
+          );
+        },
+      ),
+    ];
   }
 }
 
@@ -553,8 +577,8 @@ class HistoryPromise extends StatelessWidget {
                     message: promise.reason,
                     title: 'Alasan',
                   );
-                } else if (promise.status == 'accepted') {
-                  // TODO : Accepted
+                } else if (promise.status == 'completed') {
+                  context.push(Destination.chatPath);
                 }
               },
             ),

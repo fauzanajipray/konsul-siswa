@@ -40,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: BlocBuilder<ProfileCubit, DataState<Profile>>(
         builder: (context, state) {
+          String? imageUrl = state.item?.imageUrl;
           return Stack(
             children: [
               SingleChildScrollView(
@@ -76,13 +77,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 .push(Destination.updateProfilePath)
                                 .then((value) {
                               if (value is bool) {
-                                if (value) {
-                                  context.read<ProfileCubit>().getProfile(
-                                      BlocProvider.of<AuthCubit>(context)
-                                              .state
-                                              .userId ??
-                                          '');
-                                }
+                                context.read<ProfileCubit>().getProfile(
+                                    BlocProvider.of<AuthCubit>(context)
+                                            .state
+                                            .userId ??
+                                        '');
                               }
                             }),
                             child: Container(
@@ -106,8 +105,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               alignment: Alignment.center,
                               child: CircleAvatar(
                                 radius: 80,
-                                backgroundImage: const AssetImage(
-                                    'assets/images/user_image.png'),
+                                backgroundImage: imageUrl != null
+                                    ? NetworkImage(imageUrl)
+                                        as ImageProvider<Object>
+                                    : const AssetImage(
+                                            'assets/images/user_image.png')
+                                        as ImageProvider<Object>,
                                 backgroundColor:
                                     Theme.of(context).colorScheme.outline,
                               ),
