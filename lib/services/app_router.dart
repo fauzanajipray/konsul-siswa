@@ -77,20 +77,6 @@ class AppRouter {
               ),
             ],
           ),
-          // StatefulShellBranch(
-          //   navigatorKey: tab4,
-          //   routes: [
-          //     GoRoute(
-          //       path: Destination.chatPath,
-          //       pageBuilder: (context, state) {
-          //         return getPage(
-          //           child: const ChatPage(),
-          //           state: state,
-          //         );
-          //       },
-          //     ),
-          //   ],
-          // ),
           StatefulShellBranch(
             navigatorKey: tab4,
             routes: [

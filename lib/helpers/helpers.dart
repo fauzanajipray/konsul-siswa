@@ -34,6 +34,8 @@ Color? getColorStatus(String? status) {
       return Colors.green;
     case 'rejected':
       return Colors.red;
+    case 'completed':
+      return Colors.indigo;
     default:
       return null;
   }
