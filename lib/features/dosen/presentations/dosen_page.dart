@@ -74,6 +74,9 @@ class _DosenPageState extends State<DosenPage> {
                     );
                   }
 
+                  String? imageUrl = state.user?.imageUrl;
+                  imageUrl = (imageUrl == '') ? null : imageUrl;
+
                   return Container(
                     color: Theme.of(context).colorScheme.surface,
                     child: Card(
@@ -159,11 +162,16 @@ class _DosenPageState extends State<DosenPage> {
                                       color: Colors.white, width: 2.0),
                                   color: Theme.of(context).colorScheme.tertiary,
                                 ),
-                                child: ClipOval(
-                                  child: Image.asset(
-                                    'assets/images/user.png',
-                                    fit: BoxFit.cover,
-                                  ),
+                                child: CircleAvatar(
+                                  radius: 80,
+                                  backgroundImage: imageUrl != null
+                                      ? NetworkImage(imageUrl)
+                                          as ImageProvider<Object>
+                                      : const AssetImage(
+                                              'assets/images/user_image.png')
+                                          as ImageProvider<Object>,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.outline,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -283,8 +291,8 @@ class _DosenPageState extends State<DosenPage> {
 
                           String? imageUrl =
                               (doc.data() as Map<String, dynamic>)
-                                      .containsKey('image')
-                                  ? doc['image']
+                                      .containsKey('imageUrl')
+                                  ? doc['imageUrl']
                                   : null;
                           String? name = (doc.data() as Map<String, dynamic>)
                                   .containsKey('name')

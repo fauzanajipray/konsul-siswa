@@ -84,6 +84,9 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                 ),
               );
             }
+
+            String? imageUrl = stateDosen.user?.imageUrl;
+            imageUrl = (imageUrl == '') ? null : imageUrl;
             return BlocConsumer<AddPromiseCubit, DataState>(
               listener: (context, state) {
                 if (state.status == LoadStatus.failure) {
@@ -131,11 +134,17 @@ class _DosenAvailSelectPageState extends State<DosenAvailSelectPage> {
                                               .colorScheme
                                               .tertiary,
                                         ),
-                                        child: ClipOval(
-                                          child: Image.asset(
-                                            'assets/images/user.png',
-                                            fit: BoxFit.cover,
-                                          ),
+                                        child: CircleAvatar(
+                                          radius: 80,
+                                          backgroundImage: imageUrl != null
+                                              ? NetworkImage(imageUrl)
+                                                  as ImageProvider<Object>
+                                              : const AssetImage(
+                                                      'assets/images/user_image.png')
+                                                  as ImageProvider<Object>,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .outline,
                                         ),
                                       ),
                                       const SizedBox(width: 8),

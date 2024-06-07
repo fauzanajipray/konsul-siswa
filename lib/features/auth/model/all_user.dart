@@ -7,7 +7,9 @@ class AllUser {
   final String? nisn;
   final String? nip;
   final String? type;
+  final String? phoneNumber;
   final String? pembimbing;
+  final String? imageUrl;
 
   AllUser({
     this.id,
@@ -16,7 +18,9 @@ class AllUser {
     this.nisn,
     this.nip,
     this.type,
+    this.phoneNumber,
     this.pembimbing,
+    this.imageUrl,
   });
 
   AllUser copyWith({
@@ -26,7 +30,9 @@ class AllUser {
     String? nisn,
     String? nip,
     String? type,
+    String? phoneNumber,
     String? pembimbing,
+    String? imageUrl,
   }) {
     return AllUser(
       id: id ?? this.id,
@@ -35,7 +41,9 @@ class AllUser {
       nisn: nisn ?? this.nisn,
       nip: nip ?? this.nip,
       type: type ?? this.type,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       pembimbing: pembimbing ?? this.pembimbing,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 
@@ -51,7 +59,9 @@ class AllUser {
         nisn: json["nisn"] ?? '',
         nip: json["nip"] ?? '',
         type: json["type"] ?? '',
+        phoneNumber: json["number"] ?? '',
         pembimbing: json["pembimbing"] ?? '',
+        imageUrl: json["imageUrl"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,6 +71,8 @@ class AllUser {
         "nisn": nisn,
         "nip": nip,
         "type": type,
+        "number": phoneNumber,
         "pembimbing": pembimbing,
+        "imageUrl": imageUrl,
       };
 }

@@ -207,8 +207,8 @@ class _HomePageState extends State<HomePage> {
                       ...snapshot.data!.docs.map((DocumentSnapshot document) {
                         String? imageUrl =
                             (document.data() as Map<String, dynamic>)
-                                    .containsKey('image')
-                                ? document['image']
+                                    .containsKey('imageUrl')
+                                ? document['imageUrl']
                                 : null;
                         String? name = (document.data() as Map<String, dynamic>)
                                 .containsKey('name')
